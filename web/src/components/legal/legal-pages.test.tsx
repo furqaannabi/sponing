@@ -58,6 +58,48 @@ describe("LG-FR-05 to LG-FR-10 the privacy policy", () => {
     expect(screen.getByText("Vercel: hosting this website, and counting visits to its pages without cookies.")).toBeVisible();
   });
 
+  test("LG-FR-18 (1.5): says how the data is protected, after What we never do", () => {
+    render(<PrivacyPage />);
+    const headings = screen.getAllByRole("heading", { level: 2 }).map((h) => h.textContent);
+    expect(headings.indexOf("How we protect it")).toBe(headings.indexOf("What we never do") + 1);
+    const items = within(screen.getByRole("region", { name: "How we protect it" }))
+      .getAllByRole("listitem")
+      .map((li) => li.textContent);
+    expect(items).toEqual([
+      "Everything between your browser, Sponing and the services it uses travels over HTTPS.",
+      "Your Google and Instagram access is encrypted with AES-256, using a key kept apart from the database. It is never sent to your browser or written to logs.",
+      "The database and stored files are encrypted at rest.",
+      "Drafts are kept in private storage. Only the two sides of their deal can open them, through links that expire after 15 minutes.",
+      "Your sign-in is kept in a cookie that scripts on the page can’t read.",
+      "Server logs hold ids only: never tokens, passwords, video links or what was said in a video.",
+      "Only the two people who run Sponing at Allynt Labs can reach its systems, and they sign in with multi-factor authentication.",
+      "We don’t use your data, or anything from Google or Instagram, to train AI models.",
+    ]);
+    expect(screen.getByRole("region", { name: "What we never do" })).not.toHaveTextContent("tokens are encrypted");
+  });
+
+  test("LG-FR-19 (1.5): Google and YouTube, with Limited Use and each named page linked", () => {
+    render(<PrivacyPage />);
+    const headings = screen.getAllByRole("heading", { level: 2 }).map((h) => h.textContent);
+    expect(headings.indexOf("Google and YouTube")).toBe(headings.indexOf("How we protect it") + 1);
+    const google = screen.getByRole("region", { name: "Google and YouTube" });
+    expect(google).toHaveTextContent(
+      "Sponing’s use and transfer of information received from Google APIs adheres to the Google API Services User Data Policy, including the Limited Use requirements.",
+    );
+    expect(google).toHaveTextContent(
+      "Sponing uses YouTube API Services to read your channel and the video you give it. By connecting YouTube you agree to YouTube’s Terms of Service, and Google’s Privacy Policy applies to what Google holds.",
+    );
+    expect(google).toHaveTextContent("You can remove Sponing’s access at any time in your Google account’s settings.");
+    for (const [name, href] of [
+      ["Google API Services User Data Policy", "https://developers.google.com/terms/api-services-user-data-policy"],
+      ["YouTube’s Terms of Service", "https://www.youtube.com/t/terms"],
+      ["Google’s Privacy Policy", "https://policies.google.com/privacy"],
+      ["Google account’s settings", "https://myaccount.google.com/permissions"],
+    ]) {
+      expect(within(google).getByRole("link", { name })).toHaveAttribute("href", href);
+    }
+  });
+
   test("LG-FR-09 (1.3): says how to delete in its own words, not only by pointing to Deleting your data", () => {
     render(<PrivacyPage />);
     expect(screen.getByRole("region", { name: "Your choices" })).toHaveTextContent(

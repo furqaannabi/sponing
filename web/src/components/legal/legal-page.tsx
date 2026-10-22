@@ -3,8 +3,25 @@ import { LandingFooter } from "@/components/landing/closing-and-footer";
 import { LandingHeader } from "@/components/landing/landing-header";
 import { CONTACT_EMAIL, LEGAL_UPDATED } from "@/lib/legal/contact";
 
+/** A paragraph's text: plain, or in parts where some parts link to a page (LG 1.5). */
+export type LegalText = string | { parts: (string | { text: string; href: string })[] };
+
 /** One block of a section: a paragraph, or a list. */
-export type LegalBlock = string | { list: string[] };
+export type LegalBlock = LegalText | { list: string[] };
+
+/** A paragraph's text, with its links. */
+function Text({ text }: { text: LegalText }) {
+  if (typeof text === "string") return text;
+  return text.parts.map((part, i) =>
+    typeof part === "string" ? (
+      part
+    ) : (
+      <a key={i} href={part.href} className="font-semibold text-espresso underline decoration-latte-line underline-offset-3">
+        {part.text}
+      </a>
+    ),
+  );
+}
 
 /** One section of a legal page, with its anchor id. */
 export interface LegalSection {
@@ -53,9 +70,9 @@ export function LegalPage({ title, sections, after }: { title: string; sections:
                 {s.heading}
               </h2>
               {s.blocks.map((b, i) =>
-                typeof b === "string" ? (
+                typeof b === "string" || "parts" in b ? (
                   <p key={i} className="mt-3 text-ink-2">
-                    {b}
+                    <Text text={b} />
                   </p>
                 ) : (
                   <ul key={i} className="mt-3 list-disc space-y-1.5 pl-5 text-ink-2 marker:text-ink-4">

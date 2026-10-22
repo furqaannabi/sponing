@@ -39,7 +39,55 @@ const SECTIONS: LegalSection[] = [
           "Let an AI move money. AI gives findings with evidence; our own code checks the evidence and decides.",
         ],
       },
-      "Your account tokens are encrypted and never sent to your browser. Drafts are private: only the two sides of their deal can see them, through short-lived links.",
+    ],
+  },
+  {
+    // LG-FR-18 (1.5): each line traces to the 2026-10-22 decision record.
+    id: "how-we-protect-it",
+    heading: "How we protect it",
+    blocks: [
+      {
+        list: [
+          "Everything between your browser, Sponing and the services it uses travels over HTTPS.",
+          "Your Google and Instagram access is encrypted with AES-256, using a key kept apart from the database. It is never sent to your browser or written to logs.",
+          "The database and stored files are encrypted at rest.",
+          "Drafts are kept in private storage. Only the two sides of their deal can open them, through links that expire after 15 minutes.",
+          "Your sign-in is kept in a cookie that scripts on the page can’t read.",
+          "Server logs hold ids only: never tokens, passwords, video links or what was said in a video.",
+          "Only the two people who run Sponing at Allynt Labs can reach its systems, and they sign in with multi-factor authentication.",
+          "We don’t use your data, or anything from Google or Instagram, to train AI models.",
+        ],
+      },
+    ],
+  },
+  {
+    // LG-FR-19 (1.5): Google's Limited Use statement and YouTube's links.
+    id: "google-and-youtube",
+    heading: "Google and YouTube",
+    blocks: [
+      {
+        parts: [
+          "Sponing’s use and transfer of information received from Google APIs adheres to the ",
+          { text: "Google API Services User Data Policy", href: "https://developers.google.com/terms/api-services-user-data-policy" },
+          ", including the Limited Use requirements.",
+        ],
+      },
+      {
+        parts: [
+          "Sponing uses YouTube API Services to read your channel and the video you give it. By connecting YouTube you agree to ",
+          { text: "YouTube’s Terms of Service", href: "https://www.youtube.com/t/terms" },
+          ", and ",
+          { text: "Google’s Privacy Policy", href: "https://policies.google.com/privacy" },
+          " applies to what Google holds.",
+        ],
+      },
+      {
+        parts: [
+          "You can remove Sponing’s access at any time in your ",
+          { text: "Google account’s settings", href: "https://myaccount.google.com/permissions" },
+          ".",
+        ],
+      },
     ],
   },
   {
@@ -92,9 +140,10 @@ const SECTIONS: LegalSection[] = [
 
 /**
  * `/privacy`: what Sponing collects and why, what it never does, who handles
- * it, how long it is kept, the reader's choices and cookies.
+ * it, how it is protected, Google and YouTube, how long it is kept, the
+ * reader’s choices and cookies.
  *
- * @see docs/specs/legal-pages-frd.md LG-FR-05 to LG-FR-10
+ * @see docs/specs/legal-pages-frd.md LG-FR-05 to LG-FR-10, LG-FR-18, LG-FR-19
  */
 export function PrivacyPage() {
   return <LegalPage title="Privacy policy" sections={SECTIONS} />;
